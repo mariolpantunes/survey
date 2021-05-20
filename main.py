@@ -10,8 +10,7 @@ import logging
 import argparse
 import pandas as pd
 import matplotlib.pyplot as plt
-
-
+from matplotlib.backends.backend_pdf import PdfPages
 from enum import Enum
 
 
@@ -30,7 +29,7 @@ logger = logging.getLogger(__name__)
 
 def main(args):
     df = pd.read_csv(args.i, index_col=0)
-    logger.info(df.shape)
+    #logger.info(df.shape)
 
     #filter data base on Situation
     if args.s is Situation.bachelor:
@@ -41,69 +40,85 @@ def main(args):
         df = df.loc[df['Qual a sua situação atual?'].isin(['Aluno de Doutoramento'])]
     #logger.info(df.shape)
 
-    df[['A oferta formativa da Universidade é adequada?']].hist(grid=False, range=[1,4])
-    plt.show()
+    with PdfPages(args.o) as pdf:
 
-    df[['Pretende continuar estudos (Mestrado/Doutoramento)?']].value_counts().plot(kind='pie', subplots=True, autopct='%.2f%%')
-    plt.suptitle('Pretende continuar estudos (Mestrado/Doutoramento)?')
-    plt.show()
+        df[['A oferta formativa da Universidade é adequada?']].hist(grid=False, range=[1,4])
+        pdf.savefig()
+        plt.close()
     
-    df[['Os mestrados atuais cobrem os meus interesses?']].hist(grid=False, range=[1,4])
-    plt.show()
+        df[['Pretende continuar estudos (Mestrado/Doutoramento)?']].value_counts().plot(kind='pie', subplots=True, autopct='%.2f%%')
+        plt.suptitle('Pretende continuar estudos (Mestrado/Doutoramento)?')
+        pdf.savefig()
+        plt.close()
+        
+        df[['Os mestrados atuais cobrem os meus interesses?']].hist(grid=False, range=[1,4])
+        pdf.savefig()
+        plt.close()
 
-    df[['Considera que um mestrado/doutoramento permite acesso a melhores oportunidades no futuro?']].hist(grid=False, range=[1,4])
-    plt.show()
+        df[['Considera que um mestrado/doutoramento permite acesso a melhores oportunidades no futuro?']].hist(grid=False, range=[1,4])
+        pdf.savefig()
+        plt.close()
 
-    df[['Pondera concorrer a uma bolsa de investigação?']].value_counts().plot(kind='pie', subplots=True, autopct='%.2f%%')
-    plt.suptitle('Pondera concorrer a uma bolsa de investigação?')
-    plt.show()
+        df[['Pondera concorrer a uma bolsa de investigação?']].value_counts().plot(kind='pie', subplots=True, autopct='%.2f%%')
+        plt.suptitle('Pondera concorrer a uma bolsa de investigação?')
+        pdf.savefig()
+        plt.close()
 
-    df[['Já teve alguma bolsa de investigação no passado?']].value_counts().plot(kind='pie', subplots=True, autopct='%.2f%%')
-    plt.suptitle('Já teve alguma bolsa de investigação no passado?')
-    plt.show()
+        df[['Já teve alguma bolsa de investigação no passado?']].value_counts().plot(kind='pie', subplots=True, autopct='%.2f%%')
+        plt.suptitle('Já teve alguma bolsa de investigação no passado?')
+        pdf.savefig()
+        plt.close()
 
-    df[['Considera a remuneração das bolsas justa para o esforço?']].hist(grid=False, range=[1,4])
-    plt.show()
+        df[['Considera a remuneração das bolsas justa para o esforço?']].hist(grid=False, range=[1,4])
+        pdf.savefig()
+        plt.close()
 
-    df[['Considera que uma bolsa de investigação melhora positivamente o seu CV?']].hist(grid=False, range=[1,4])
-    plt.show()
+        df[['Considera que uma bolsa de investigação melhora positivamente o seu CV?']].hist(grid=False, range=[1,4])
+        pdf.savefig()
+        plt.close()
 
-    df[['Considera terminar a licenciatura e procurar emprego?']].value_counts().plot(kind='pie', subplots=True, autopct='%.2f%%')
-    plt.suptitle('Considera terminar a licenciatura e procurar emprego?')
-    plt.show()
+        df[['Considera terminar a licenciatura e procurar emprego?']].value_counts().plot(kind='pie', subplots=True, autopct='%.2f%%')
+        plt.suptitle('Considera terminar a licenciatura e procurar emprego?')
+        pdf.savefig()
+        plt.close()
 
-    df[['Considera a remuneração de um emprego justo para o esforço?']].hist(grid=False, range=[1,4])
-    plt.show()
+        df[['Considera a remuneração de um emprego justo para o esforço?']].hist(grid=False, range=[1,4])
+        pdf.savefig()
+        plt.close()
 
-    df[['Considera que um emprego na industria tem um peso positivo no CV?']].hist(grid=False, range=[1,4])
-    plt.show()
+        df[['Considera que um emprego na industria tem um peso positivo no CV?']].hist(grid=False, range=[1,4])
+        pdf.savefig()
+        plt.close()
+        
+        tmp = pd.to_numeric(df['Que salário líquido mensal considera adequado para si durante os próximos 12 meses?'], errors='coerce')
+        tmp = tmp.dropna()
+        tmp.hist(grid=False)
+        plt.suptitle('Que salário líquido mensal considera adequado para si durante os próximos 12 meses?')
+        pdf.savefig()
+        plt.close()
 
-    tmp = pd.to_numeric(df['Que salário líquido mensal considera adequado para si durante os próximos 12 meses?'], errors='coerce')
-    tmp = tmp.dropna()
-    tmp.hist(grid=False)
-    plt.suptitle('Que salário líquido mensal considera adequado para si durante os próximos 12 meses?')
-    plt.show()
-
-    questions = ['Emprego empresa de TI em Aveiro', 'Emprego empresa de TI no Porto', 'Emprego empresa de TI em Lisboa', 'Emprego em Consultora',
-    'Emprego em Software House de maior dimensão', 'Emprego em Academia ou Entidade de investigação', 'Bolsa de Investigação',
-    'Emprego em empresa estrangeira (Remote)', 'Emprego em empresa estrangeira (no estrangeiro)', 'Emprego fora da área de TI',
-    'Emprego numa Startup', 'Começar a minha Startup', 'Nenhum emprego']
-    keys = ['Certamente', 'Provavelmente', 'Talvez', 'Não!']
-    for q in questions:
-        tmp = df[[f'Classifique os seguintes cenários em relação ao que considera ser o mais adequado face ao seu interesse e competências [{q}]']].value_counts()
-        logger.info(tmp)
-        for k in keys:
-            if k not in tmp:
-                tmp[k] = 0
-        tmp = tmp[keys]
-        tmp.plot(kind='bar', rot=0, color=['g', 'b', 'y', 'r'])
-        plt.show()
+        questions = ['Emprego empresa de TI em Aveiro', 'Emprego empresa de TI no Porto', 'Emprego empresa de TI em Lisboa', 'Emprego em Consultora',
+        'Emprego em Software House de maior dimensão', 'Emprego em Academia ou Entidade de investigação', 'Bolsa de Investigação',
+        'Emprego em empresa estrangeira (Remote)', 'Emprego em empresa estrangeira (no estrangeiro)', 'Emprego fora da área de TI',
+        'Emprego numa Startup', 'Começar a minha Startup', 'Nenhum emprego']
+        keys = ['Certamente', 'Provavelmente', 'Talvez', 'Não!']
+        for q in questions:
+            tmp = df[[f'Classifique os seguintes cenários em relação ao que considera ser o mais adequado face ao seu interesse e competências [{q}]']].value_counts()
+            #logger.info(tmp)
+            for k in keys:
+                if k not in tmp:
+                    tmp[k] = 0
+            tmp = tmp[keys]
+            tmp.plot(kind='bar', rot=0, color=['g', 'b', 'y', 'r'])
+            plt.suptitle(q)
+            pdf.savefig()
+            plt.close()
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Survey analysis tool')
     parser.add_argument('-i', type=str, help='input file', default='Empregabilidade.csv')
     parser.add_argument('-s', type=Situation, choices=list(Situation), default='bachelor')
-    parser.add_argument('-o', type=str, help='output file')
+    parser.add_argument('-o', type=str, help='output file', default='report.pdf')
     args = parser.parse_args()
     
     main(args)
