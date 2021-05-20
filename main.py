@@ -38,17 +38,24 @@ def main(args):
         df = df.loc[df['Qual a sua situação atual?'].isin(['Aluno 4º ano (1º de Mestrado)', 'Aluno 5º ano (2º de Mestrado)'])]
     logger.info(df.shape)
 
-    df[['A oferta formativa da Universidade é adequada?']].hist(grid=False)
+    df[['A oferta formativa da Universidade é adequada?']].hist(grid=False, range=[1,4])
+    #df = df[['A oferta formativa da Universidade é adequada?']].value_counts()
+    #df = df.set_index([1,2,3,4])
+    #df[['A oferta formativa da Universidade é adequada?']].value_counts().plot(kind='bar', subplots=True)
+
+    #print(df[['A oferta formativa da Universidade é adequada?']])
+    #df.plot(kind='bar', subplots=True)
+    #plt.xlim(1,4)
     plt.show()
 
     df[['Pretende continuar estudos (Mestrado/Doutoramento)?']].value_counts().plot(kind='pie', subplots=True, autopct='%.2f%%')
     plt.suptitle('Pretende continuar estudos (Mestrado/Doutoramento)?')
     plt.show()
     
-    df[['Os mestrados atuais cobrem os meus interesses?']].hist(grid=False)
+    df[['Os mestrados atuais cobrem os meus interesses?']].hist(grid=False, range=[1,4])
     plt.show()
 
-    df[['Considera que um mestrado/doutoramento permite acesso a melhores oportunidades no futuro?']].hist(grid=False)
+    df[['Considera que um mestrado/doutoramento permite acesso a melhores oportunidades no futuro?']].hist(grid=False, range=[1,4])
     plt.show()
 
     df[['Pondera concorrer a uma bolsa de investigação?']].value_counts().plot(kind='pie', subplots=True, autopct='%.2f%%')
@@ -59,25 +66,26 @@ def main(args):
     plt.suptitle('Já teve alguma bolsa de investigação no passado?')
     plt.show()
 
-    df[['Considera a remuneração das bolsas justa para o esforço?']].hist(grid=False)
+    df[['Considera a remuneração das bolsas justa para o esforço?']].hist(grid=False, range=[1,4])
     plt.show()
 
-    df[['Considera que uma bolsa de investigação melhora positivamente o seu CV?']].hist(grid=False)
+    df[['Considera que uma bolsa de investigação melhora positivamente o seu CV?']].hist(grid=False, range=[1,4])
     plt.show()
 
     df[['Considera terminar a licenciatura e procurar emprego?']].value_counts().plot(kind='pie', subplots=True, autopct='%.2f%%')
     plt.suptitle('Considera terminar a licenciatura e procurar emprego?')
     plt.show()
 
-    df[['Considera a remuneração de um emprego justo para o esforço?']].hist(grid=False)
+    df[['Considera a remuneração de um emprego justo para o esforço?']].hist(grid=False, range=[1,4])
     plt.show()
 
-    df[['Considera que um emprego na industria tem um peso positivo no CV?']].hist(grid=False)
+    df[['Considera que um emprego na industria tem um peso positivo no CV?']].hist(grid=False, range=[1,4])
     plt.show()
 
     tmp = pd.to_numeric(df['Que salário líquido mensal considera adequado para si durante os próximos 12 meses?'], errors='coerce')
     tmp = tmp.dropna()
     tmp.hist(grid=False)
+    plt.suptitle('Que salário líquido mensal considera adequado para si durante os próximos 12 meses?')
     plt.show()
 
 if __name__ == '__main__':
