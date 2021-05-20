@@ -18,6 +18,7 @@ from enum import Enum
 class Situation(Enum):
     masters = 'masters'
     bachelor = 'bachelor'
+    phd = 'phd'
 
     def __str__(self):
         return self.value
@@ -36,6 +37,8 @@ def main(args):
         df = df.loc[df['Qual a sua situação atual?'].isin(['Aluno 1º ano', 'Aluno 2º ano', 'Aluno 3º ano'])]
     elif args.s is Situation.masters:
         df = df.loc[df['Qual a sua situação atual?'].isin(['Aluno 4º ano (1º de Mestrado)', 'Aluno 5º ano (2º de Mestrado)'])]
+    elif args.s is Situation.phd:
+        df = df.loc[df['Qual a sua situação atual?'].isin(['Aluno de Doutoramento'])]
     logger.info(df.shape)
 
     df[['A oferta formativa da Universidade é adequada?']].hist(grid=False)
@@ -79,6 +82,10 @@ def main(args):
     tmp = tmp.dropna()
     tmp.hist(grid=False)
     plt.show()
+
+    #tmp = df[['Classifique os seguintes cenários em relação ao que considera ser o mais adequado face ao seu interesse e competências']]#.hist(grid=False)
+    #logger.info(tmp)
+    #plt.show()
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Survey analysis tool')
