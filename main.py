@@ -39,16 +39,9 @@ def main(args):
         df = df.loc[df['Qual a sua situação atual?'].isin(['Aluno 4º ano (1º de Mestrado)', 'Aluno 5º ano (2º de Mestrado)'])]
     elif args.s is Situation.phd:
         df = df.loc[df['Qual a sua situação atual?'].isin(['Aluno de Doutoramento'])]
-    logger.info(df.shape)
+    #logger.info(df.shape)
 
     df[['A oferta formativa da Universidade é adequada?']].hist(grid=False, range=[1,4])
-    #df = df[['A oferta formativa da Universidade é adequada?']].value_counts()
-    #df = df.set_index([1,2,3,4])
-    #df[['A oferta formativa da Universidade é adequada?']].value_counts().plot(kind='bar', subplots=True)
-
-    #print(df[['A oferta formativa da Universidade é adequada?']])
-    #df.plot(kind='bar', subplots=True)
-    #plt.xlim(1,4)
     plt.show()
 
     df[['Pretende continuar estudos (Mestrado/Doutoramento)?']].value_counts().plot(kind='pie', subplots=True, autopct='%.2f%%')
@@ -91,9 +84,20 @@ def main(args):
     plt.suptitle('Que salário líquido mensal considera adequado para si durante os próximos 12 meses?')
     plt.show()
 
-    #tmp = df[['Classifique os seguintes cenários em relação ao que considera ser o mais adequado face ao seu interesse e competências']]#.hist(grid=False)
-    #logger.info(tmp)
-    #plt.show()
+    questions = ['Emprego empresa de TI em Aveiro', 'Emprego empresa de TI no Porto', 'Emprego empresa de TI em Lisboa', 'Emprego em Consultora',
+    'Emprego em Software House de maior dimensão', 'Emprego em Academia ou Entidade de investigação', 'Bolsa de Investigação',
+    'Emprego em empresa estrangeira (Remote)', 'Emprego em empresa estrangeira (no estrangeiro)', 'Emprego fora da área de TI',
+    'Emprego numa Startup', 'Começar a minha Startup', 'Nenhum emprego']
+    keys = ['Certamente', 'Provavelmente', 'Talvez', 'Não!']
+    for q in questions:
+        tmp = df[[f'Classifique os seguintes cenários em relação ao que considera ser o mais adequado face ao seu interesse e competências [{q}]']].value_counts()
+        logger.info(tmp)
+        for k in keys:
+            if k not in tmp:
+                tmp[k] = 0
+        tmp = tmp[keys]
+        tmp.plot(kind='bar', rot=0, color=['g', 'b', 'y', 'r'])
+        plt.show()
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Survey analysis tool')
